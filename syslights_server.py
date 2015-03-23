@@ -18,8 +18,12 @@ def update_loop(conn):
         message = str(scaled_load).encode('ascii')
         conn.write(message)
 
-def connect_serial(DEVICE, BAUD):
-    conn = serial.Serial(DEVICE, BAUD)
+def connect_serial():
+    devices = glob.glob('/dev/ttyUSB?')
+    if not devices:
+        raise IOError()
+
+    conn = serial.Serial(devices[0], BAUD)
 
     # wtf
     conn.baudrate = 300
@@ -30,11 +34,11 @@ def connect_serial(DEVICE, BAUD):
 def main():
     while True:
         try:
-            with connect_serial(glob.glob('/dev/ttyUSB?')[0], BAUD) as conn:
+            with connect_serial() as conn:
                 update_loop(conn)
         except IOError:
-            print('Connection with %s failed! Retrying in %d seconds...'
-                % (DEVICE, CONNECT_TIMEOUT), file=sys.stderr)
+            print('Connection failed! Retrying in %d seconds...'
+                % CONNECT_TIMEOUT, file=sys.stderr)
             time.sleep(CONNECT_TIMEOUT)
 
 
