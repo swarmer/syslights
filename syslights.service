@@ -1,0 +1,8 @@
+[Unit]
+Description=Syslights driver
+
+[Service]
+ExecStart=/path/to/syslights_server.py
+
+[Install]
+WantedBy=multi-user.target
