@@ -20,6 +20,10 @@ def update_loop(conn):
 
 def connect_serial():
     devices = glob.glob('/dev/ttyUSB?')
+
+    if not devices:
+        devices = glob.glob('/dev/tty.wchusbserial*')
+
     if not devices:
         raise IOError()
 
